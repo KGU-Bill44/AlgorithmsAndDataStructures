@@ -6,7 +6,7 @@ public static class NumberUtil
     {
         if (number < 1)
         {
-            throw new ArgumentException("Число не натуральнеое.");
+            throw new ArgumentException("Число не натуральное.");
         }
         
         if (number == 1)
