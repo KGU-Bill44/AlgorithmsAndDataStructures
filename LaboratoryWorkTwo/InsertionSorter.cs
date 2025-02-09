@@ -17,7 +17,7 @@ public class InsertionSorter
         }
 
         for (int indexOfUnsortedElement = 0;
-             indexOfUnsortedElement < sortableArray.Length - 1;
+             indexOfUnsortedElement < sortableArray.Length;
              indexOfUnsortedElement++)
         {
             int element = sortableArray[indexOfUnsortedElement];
