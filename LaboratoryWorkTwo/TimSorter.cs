@@ -53,54 +53,78 @@ public class TimSorter
         List<List<int>> runs = new List<List<int>>();
         SortingMode currentSortMode = SortingMode.UNCLEAR;
         int currentRunStart = 0;
+        int currentElementIndex = 1;
+        int currentRunIndex = 0;
+        List<int> run = new List<int>();
 
-        for (int currentElementIndex = 1;
-             currentElementIndex < sortableArray.Count;
-             currentElementIndex++)
+        for (int i = 0; i < sortableArray.Count; i++)
         {
-            SortingMode nextMode = GetSortingModeBy(sortableArray, currentElementIndex - 1, currentElementIndex);
-            bool isEnd = currentElementIndex >= sortableArray.Count - 1;
-            if (currentSortMode == SortingMode.UNCLEAR)
+            int element = sortableArray[i];
+            
+            if (i == currentRunStart)
             {
-                currentSortMode = nextMode;
-                currentRunStart = currentElementIndex - 1;
-            }
-
-            if (currentSortMode == nextMode)
-            {
-                if (isEnd)
+                run.Add(element);
+                
+                if (i == sortableArray.Count - 1)
                 {
-                    List<int> runInner =
-                        sortableArray.GetRange(currentRunStart, currentElementIndex + 1 - currentRunStart);
-                    if (currentSortMode == SortingMode.DECREASING)
-                    {
-                        runInner.Reverse();
-                    }
-
-                    runs.Add(runInner);
+                    runs.Add(run);
                 }
-
+                
                 continue;
             }
 
-            List<int> run = sortableArray.GetRange(currentRunStart, currentElementIndex - currentRunStart);
-
-            if (currentSortMode == SortingMode.DECREASING)
+            if (i == currentRunStart + 1)
             {
-                run.Reverse();
+                currentSortMode = GetSortingModeBy(sortableArray, currentRunStart, i);
+                run.Add(element);
+                
+                if (i == sortableArray.Count - 1)
+                {
+                    runs.Add(run);
+                }
+                
+                continue;
             }
 
-            runs.Add(run);
-
-            if (isEnd)
+            if (currentSortMode == SortingMode.INCREASING)
             {
-                runs.Add(new List<int>(sortableArray.ElementAt(currentElementIndex)));
+                if (sortableArray[i - 1] <= sortableArray[i])
+                {
+                    run.Add(element);
+                }
+                else
+                {
+                    runs.Add(run);
+                    run = new List<int>();
+                    currentRunStart = i;
+                    i = i - 1;
+                    currentRunIndex = currentRunIndex + 1;
+                }
+            }
+            else if (currentSortMode == SortingMode.DECREASING)
+            {
+                if (sortableArray[i - 1]  > sortableArray[i])
+                {
+                    run.Add(element);
+                }
+                else
+                {
+                    run.Reverse();
+                    runs.Add(run);
+                    run = new List<int>();
+                    currentRunStart = i;
+                    i = i - 1;
+                    currentRunIndex = currentRunIndex + 1;
+                }
             }
 
-            currentSortMode = SortingMode.UNCLEAR;
+            if (i == sortableArray.Count - 1)
+            {
+                runs.Add(run);
+            }
         }
 
-        return runs.FindAll(r => r.Count > 0);
+        return runs;
     }
 
     private SortingMode GetSortingModeBy(List<int> array, int firstIndex, int secondIndex)
@@ -110,7 +134,7 @@ public class TimSorter
 
     private List<List<int>> ResizeByMinrun()
     {
-        List<List<int>> replateRuns = runs.Select(run => run.ToList()).ToList();
+        List<List<int>> replateRuns = runs.ToList();
 
         int indexCurrentRun = 0;
         List<int> currentRun = replateRuns[indexCurrentRun];
@@ -126,6 +150,7 @@ public class TimSorter
             if (currentRun.Count >= minrun)
             {
                 indexCurrentRun = indexCurrentRun + 1;
+                
                 currentRun = replateRuns[indexCurrentRun];
             }
 
