@@ -2,36 +2,36 @@
 
 public class TimSorter
 {
-    private int[] sortableArray;
+    private List<int> sortableArray;
     private int minrun;
-    private List<int[]> runs = new List<int[]>();
+    private List<List<int>> runs = new List<List<int>>();
 
     private const int UPPER_BOUND_OF_UNCOMPUTABLE_N = 64;
 
     public TimSorter(int[] sortableArray)
     {
-        this.sortableArray = sortableArray;
+        this.sortableArray = new List<int>(sortableArray);
     }
 
     public int[] Sort()
     {
-        if (sortableArray.Length < 2)
+        if (sortableArray.Count < 2)
         {
-            return sortableArray;
+            return sortableArray.ToArray();
         }
 
         minrun = CalculateMinrun();
         runs = SplittingAnArray();
         List<List<int>> replateRuns = ResizeByMinrun();
         runs = InsertionSort(replateRuns);
-        
 
-        return DistributeTreeAndAssembleSinglePiece();;
+
+        return UnionByMin();
     }
 
     private int CalculateMinrun()
     {
-        int length = sortableArray.Length;
+        int length = sortableArray.Count;
 
         if (length < UPPER_BOUND_OF_UNCOMPUTABLE_N)
         {
@@ -48,18 +48,18 @@ public class TimSorter
         return length + additionalUnit;
     }
 
-    private List<int[]> SplittingAnArray()
+    private List<List<int>> SplittingAnArray()
     {
-        List<int[]> runs = new List<int[]>();
+        List<List<int>> runs = new List<List<int>>();
         SortingMode currentSortMode = SortingMode.UNCLEAR;
         int currentRunStart = 0;
 
         for (int currentElementIndex = 1;
-             currentElementIndex < sortableArray.Length;
+             currentElementIndex < sortableArray.Count;
              currentElementIndex++)
         {
             SortingMode nextMode = GetSortingModeBy(sortableArray, currentElementIndex - 1, currentElementIndex);
-            bool isEnd = currentElementIndex >= sortableArray.Length - 1;
+            bool isEnd = currentElementIndex >= sortableArray.Count - 1;
             if (currentSortMode == SortingMode.UNCLEAR)
             {
                 currentSortMode = nextMode;
@@ -70,39 +70,40 @@ public class TimSorter
             {
                 if (isEnd)
                 {
-                    int[] run2 = sortableArray[currentRunStart..(currentElementIndex + 1)];
+                    List<int> runInner =
+                        sortableArray.GetRange(currentRunStart, currentElementIndex + 1 - currentRunStart);
                     if (currentSortMode == SortingMode.DECREASING)
                     {
-                        run2 = run2.Reverse().ToArray();
+                        runInner.Reverse();
                     }
 
-                    runs.Add(run2);
+                    runs.Add(runInner);
                 }
 
                 continue;
             }
 
-            int[] run = sortableArray[currentRunStart..(currentElementIndex)];
+            List<int> run = sortableArray.GetRange(currentRunStart, currentElementIndex - currentRunStart);
 
             if (currentSortMode == SortingMode.DECREASING)
             {
-                run = run.Reverse().ToArray();
+                run.Reverse();
             }
 
             runs.Add(run);
 
             if (isEnd)
             {
-                runs.Add(new int[] { sortableArray[currentElementIndex] });
+                runs.Add(new List<int>(sortableArray.ElementAt(currentElementIndex)));
             }
 
             currentSortMode = SortingMode.UNCLEAR;
         }
 
-        return runs;
+        return runs.FindAll(r => r.Count > 0);
     }
 
-    private SortingMode GetSortingModeBy(int[] array, int firstIndex, int secondIndex)
+    private SortingMode GetSortingModeBy(List<int> array, int firstIndex, int secondIndex)
     {
         return array[firstIndex] > array[secondIndex] ? SortingMode.DECREASING : SortingMode.INCREASING;
     }
@@ -121,16 +122,16 @@ public class TimSorter
             {
                 break;
             }
-            
+
             if (currentRun.Count >= minrun)
             {
                 indexCurrentRun = indexCurrentRun + 1;
                 currentRun = replateRuns[indexCurrentRun];
             }
-            
+
             nextRun = replateRuns[indexCurrentRun + 1];
 
-            int missingDimension =  minrun - currentRun.Count;
+            int missingDimension = minrun - currentRun.Count;
 
             if (missingDimension >= nextRun.Count)
             {
@@ -146,17 +147,54 @@ public class TimSorter
         return replateRuns;
     }
 
-    private List<int[]> InsertionSort(List<List<int>> replateRuns)
+    private List<List<int>> InsertionSort(List<List<int>> replateRuns)
     {
-        return replateRuns.ConvertAll(rr => new InsertionSorter(rr.ToArray()).Sort());
+        return replateRuns.ConvertAll(rr =>
+            new List<int>(new InsertionSorter(rr.ToArray()).Sort()));
     }
 
-    private int[] DistributeTreeAndAssembleSinglePiece()
+    private int[] UnionByMin()
     {
-        DistributedTree tree = new DistributedTree();
-        
-        runs.ForEach(run => tree.Add(run));
-        return tree.UnionByMin();
+        List<int> sortList = new List<int>();
+        List<int> owner = null;
+        int currentMin = 0;
+        bool isFind = false;
+
+        while (true)
+        {
+            for (int rcount = 0; rcount < runs.Count; rcount++)
+            {
+                List<int> potentialOwner = runs[rcount];
+                
+                if (potentialOwner.Count <= 0) continue;
+                if (!isFind)
+                {
+                    currentMin = potentialOwner[0];
+                    owner = potentialOwner;
+                    isFind = true;
+                    continue;
+                }
+
+                int potentialMin = potentialOwner[0];
+                if (currentMin <= potentialMin) continue;
+                currentMin = potentialMin;
+                owner = potentialOwner;
+            }
+
+            if (isFind)
+            {
+                sortList.Add(owner[0]);
+                owner.RemoveAt(0);
+                isFind = false;
+                owner = null;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return sortList.ToArray();
     }
 
     private enum SortingMode
