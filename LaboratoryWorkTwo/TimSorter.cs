@@ -2,36 +2,35 @@
 
 public class TimSorter
 {
-    private List<int> sortableArray;
+    private int[] sortableArray;
     private int minrun;
-    private List<List<int>> runs = new List<List<int>>();
+
+    private Stack<KeyValuePair<int, int>> stack = new Stack<KeyValuePair<int, int>>();
+    private int headOfStack = 0;
 
     private const int UPPER_BOUND_OF_UNCOMPUTABLE_N = 64;
 
     public TimSorter(int[] sortableArray)
     {
-        this.sortableArray = new List<int>(sortableArray);
+        this.sortableArray = sortableArray;
     }
 
     public int[] Sort()
     {
-        if (sortableArray.Count < 2)
+        if (sortableArray.Length < 2)
         {
             return sortableArray.ToArray();
         }
 
         minrun = CalculateMinrun();
-        runs = SplittingAnArray();
-        List<List<int>> replateRuns = ResizeByMinrun();
-        runs = InsertionSort(replateRuns);
-
-
-        return UnionByMin();
+        SplittingAnArray();
+        MergeStack();
+        return sortableArray;
     }
 
     private int CalculateMinrun()
     {
-        int length = sortableArray.Count;
+        int length = sortableArray.Length;
 
         if (length < UPPER_BOUND_OF_UNCOMPUTABLE_N)
         {
@@ -48,184 +47,229 @@ public class TimSorter
         return length + additionalUnit;
     }
 
-    private List<List<int>> SplittingAnArray()
+    private void SplittingAnArray()
     {
-        List<List<int>> runs = new List<List<int>>();
-        SortingMode currentSortMode = SortingMode.UNCLEAR;
-        int currentRunStart = 0;
-        int currentElementIndex = 1;
-        int currentRunIndex = 0;
-        List<int> run = new List<int>();
+        int runStartIndex = 0;
+        int indexInRun = 2;
 
-        for (int i = 0; i < sortableArray.Count; i++)
+        SwapIfGrates(0, 1);
+
+        for (int i = indexInRun; i < sortableArray.Length; i++)
         {
-            int element = sortableArray[i];
-            
-            if (i == currentRunStart)
+            if (minrun > indexInRun)
             {
-                run.Add(element);
-                
-                if (i == sortableArray.Count - 1)
-                {
-                    runs.Add(run);
-                }
-                
-                continue;
-            }
+                SetByBin(runStartIndex, i);
+                indexInRun = indexInRun + 1;
 
-            if (i == currentRunStart + 1)
-            {
-                currentSortMode = GetSortingModeBy(sortableArray, currentRunStart, i);
-                run.Add(element);
-                
-                if (i == sortableArray.Count - 1)
+                if (i == sortableArray.Length - 1)
                 {
-                    runs.Add(run);
-                }
-                
-                continue;
-            }
-
-            if (currentSortMode == SortingMode.INCREASING)
-            {
-                if (sortableArray[i - 1] <= sortableArray[i])
-                {
-                    run.Add(element);
-                }
-                else
-                {
-                    runs.Add(run);
-                    run = new List<int>();
-                    currentRunStart = i;
-                    i = i - 1;
-                    currentRunIndex = currentRunIndex + 1;
+                    AddInStack(runStartIndex, i - runStartIndex + 1);
                 }
             }
-            else if (currentSortMode == SortingMode.DECREASING)
+            else if (IsGrater(i - 2, i - 1) == IsGrater(i - 1, i))
             {
-                if (sortableArray[i - 1]  > sortableArray[i])
+                indexInRun = indexInRun + 1;
+
+                if (i == sortableArray.Length - 1)
                 {
-                    run.Add(element);
+                    AddInStack(runStartIndex, i - runStartIndex + 1);
                 }
-                else
-                {
-                    run.Reverse();
-                    runs.Add(run);
-                    run = new List<int>();
-                    currentRunStart = i;
-                    i = i - 1;
-                    currentRunIndex = currentRunIndex + 1;
-                }
-            }
-
-            if (i == sortableArray.Count - 1)
-            {
-                runs.Add(run);
-            }
-        }
-
-        return runs;
-    }
-
-    private SortingMode GetSortingModeBy(List<int> array, int firstIndex, int secondIndex)
-    {
-        return array[firstIndex] > array[secondIndex] ? SortingMode.DECREASING : SortingMode.INCREASING;
-    }
-
-    private List<List<int>> ResizeByMinrun()
-    {
-        List<List<int>> replateRuns = runs.ToList();
-
-        int indexCurrentRun = 0;
-        List<int> currentRun = replateRuns[indexCurrentRun];
-        List<int> nextRun = replateRuns[indexCurrentRun + 1];
-
-        while (true)
-        {
-            if (indexCurrentRun + 1 >= replateRuns.Count)
-            {
-                break;
-            }
-
-            if (currentRun.Count >= minrun)
-            {
-                indexCurrentRun = indexCurrentRun + 1;
-                
-                currentRun = replateRuns[indexCurrentRun];
-            }
-
-            nextRun = replateRuns[indexCurrentRun + 1];
-
-            int missingDimension = minrun - currentRun.Count;
-
-            if (missingDimension >= nextRun.Count)
-            {
-                currentRun.AddRange(nextRun);
-                replateRuns.Remove(nextRun);
             }
             else
             {
-                currentRun.AddRange(nextRun.GetRange(0, missingDimension));
+                AddInStack(runStartIndex, i - runStartIndex);
+                runStartIndex = i;
+                SwapIfGrates(i, i + 1);
+                indexInRun = 2;
+                i = i - 1 + 2;
+            }
+        }
+    }
+
+    private bool IsGrater(int indexFirst, int indexSecond)
+    {
+        return sortableArray[indexFirst] <= sortableArray[indexSecond];
+    }
+
+    private void SwapIfGrates(int fist, int second)
+    {
+        if (sortableArray[fist] > sortableArray[second])
+        {
+            (sortableArray[fist], sortableArray[second]) = (sortableArray[second], sortableArray[fist]);
+        }
+    }
+
+    private void SetByBin(int startIndex, int elementIndex)
+    {
+        int element = sortableArray[elementIndex];
+        int sortIndex = elementIndex - 1;
+
+        while (sortIndex >= startIndex && sortableArray[sortIndex] > element)
+        {
+            sortableArray[sortIndex + 1] = sortableArray[sortIndex];
+            sortIndex = sortIndex - 1;
+        }
+
+        sortableArray[sortIndex + 1] = element;
+    }
+
+    private void AddInStack(int run, int size)
+    {
+        KeyValuePair<int, int> Z = new KeyValuePair<int, int>(run, size);
+        stack.Push(Z);
+
+        while (!CheckStack())
+        {
+            FixStack();
+        }
+    }
+
+    private bool CheckStack()
+    {
+        int stackCount = stack.Count > 2 ? 3 : stack.Count;
+        KeyValuePair<int, int>[] firstPairs = new KeyValuePair<int, int>[stackCount];
+
+        for (int i = 0; i < stackCount; i++)
+        {
+            firstPairs[i] = stack.Pop();
+        }
+
+        for (int lastIndex = stackCount - 1; lastIndex >= 0; lastIndex--)
+        {
+            stack.Push(firstPairs[lastIndex]);
+        }
+
+        return stackCount switch
+        {
+            > 2 when !(firstPairs[2].Value > firstPairs[0].Value + firstPairs[1].Value) => false,
+            <= 1 => true,
+            _ => firstPairs[1].Value > firstPairs[0].Value
+        };
+    }
+
+    private void FixStack()
+    {
+        int stackCount = stack.Count > 2 ? 3 : stack.Count;
+        int lowerLimit = 0;
+        KeyValuePair<int, int>[] firstPairs = new KeyValuePair<int, int>[stackCount];
+
+        for (int i = 0; i < stackCount; i++)
+        {
+            firstPairs[i] = stack.Pop();
+        }
+
+        if (stackCount == 2)
+        {
+            if (!(firstPairs[1].Value > firstPairs[0].Value))
+            {
+                firstPairs[1] = Merge(firstPairs[1], firstPairs[0]);
+                lowerLimit = lowerLimit + 1;
+            }
+        }
+        else if (stackCount > 2)
+        {
+            if (!(firstPairs[1].Value > firstPairs[0].Value
+                  && firstPairs[2].Value > firstPairs[1].Value + firstPairs[0].Value))
+            {
+                if (firstPairs[2].Value > firstPairs[0].Value)
+                {
+                    firstPairs[1] = Merge(firstPairs[1], firstPairs[0]);
+                }
+                else
+                {
+                    firstPairs[2] = Merge(firstPairs[2], firstPairs[1]);
+                    firstPairs[1] = firstPairs[0];
+                }
+
+                lowerLimit = lowerLimit + 1;
             }
         }
 
-        return replateRuns;
-    }
-
-    private List<List<int>> InsertionSort(List<List<int>> replateRuns)
-    {
-        return replateRuns.ConvertAll(rr =>
-            new List<int>(new InsertionSorter(rr.ToArray()).Sort()));
-    }
-
-    private int[] UnionByMin()
-    {
-        List<int> sortList = new List<int>();
-        List<int> owner = null;
-        int currentMin = 0;
-        bool isFind = false;
-
-        while (true)
+        for (int lastIndex = stackCount - 1; lastIndex >= lowerLimit; lastIndex--)
         {
-            for (int rcount = 0; rcount < runs.Count; rcount++)
-            {
-                List<int> potentialOwner = runs[rcount];
-                
-                if (potentialOwner.Count <= 0) continue;
-                if (!isFind)
-                {
-                    currentMin = potentialOwner[0];
-                    owner = potentialOwner;
-                    isFind = true;
-                    continue;
-                }
+            stack.Push(firstPairs[lastIndex]);
+        }
+    }
 
-                int potentialMin = potentialOwner[0];
-                if (currentMin <= potentialMin) continue;
-                currentMin = potentialMin;
-                owner = potentialOwner;
-            }
-
-            if (isFind)
+    private void MergeStack()
+    {
+        while (stack.Count > 1)
+        {
+            KeyValuePair<int, int> first = stack.Pop();
+            if (stack.TryPop(out var second))
             {
-                sortList.Add(owner[0]);
-                owner.RemoveAt(0);
-                isFind = false;
-                owner = null;
+                second = Merge(second, first);
+                stack.Push(second);
             }
             else
+            {
+                stack.Push(first);
+            }
+        }
+    }
+
+    private KeyValuePair<int, int> Merge(KeyValuePair<int, int> Y, KeyValuePair<int, int> Z)
+    {
+        int startRun = Math.Min(Y.Key, Z.Key);
+        int indexRun = startRun;
+        int mergeSize = Y.Value + Z.Value;
+        int size = Y.Value + Z.Value + startRun;
+        int corretteY = 0;
+        int corretteZ = 0;
+        int[] runY = new int[Y.Value];
+        int[] runZ = new int[Z.Value];
+
+        int isFinish = 0;
+
+        Copy(sortableArray, Y.Key, runY, 0, Y.Value);
+        Copy(sortableArray, Z.Key, runZ, 0, Z.Value);
+
+        while (indexRun < size)
+        {
+            int elementY = runY[corretteY];
+            int elementZ = runZ[corretteZ];
+
+            if (elementY <= elementZ)
+            {
+                sortableArray[indexRun] = elementY;
+                corretteY = corretteY + 1;
+            }
+            else
+            {
+                sortableArray[indexRun] = elementZ;
+                corretteZ = corretteZ + 1;
+            }
+
+            indexRun = indexRun + 1;
+            isFinish = corretteY == runY.Length ? 1 :
+                corretteZ == runZ.Length ? 2 : 0;
+
+            if (isFinish != 0)
             {
                 break;
             }
         }
 
-        return sortList.ToArray();
+        switch (isFinish)
+        {
+            case 1:
+                Copy(runZ, corretteZ, sortableArray, indexRun, size - indexRun);
+                break;
+            case 2:
+                Copy(runY, corretteY, sortableArray, indexRun, size - indexRun);
+                break;
+        }
+
+        return new KeyValuePair<int, int>(startRun, mergeSize);
     }
 
-    private enum SortingMode
+    private void Copy(int[] sourceArray, int sourceIndex, int[] recipient, int recipientStartIndex, int lenght)
     {
-        UNCLEAR,
-        INCREASING,
-        DECREASING
+        for (int i = 0; i < lenght; i++)
+        {
+            recipient[recipientStartIndex] = sourceArray[sourceIndex];
+            sourceIndex = sourceIndex + 1;
+            recipientStartIndex = recipientStartIndex + 1;
+        }
     }
 }
