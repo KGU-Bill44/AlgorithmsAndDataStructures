@@ -11,7 +11,7 @@ internal class ConsoleUi
         {
             int number = GetNumberFromConsole("длину массива");
             int[] sortArray = CreateSortedArrayByLenght(number);
-            BinarySearch search = new BinarySearch(sortArray);
+            FibonacciSearch search = new FibonacciSearch(sortArray);
             int desiredNumber = GetNumberFromConsole("число, которое хотите найти");
             int desiredNumberIndex = search.FindIndex(desiredNumber);
 
@@ -26,7 +26,7 @@ internal class ConsoleUi
         }
         catch (FormatException e)
         {
-            Console.WriteLine("Введеная строка не соответсвует формату числа");
+            Console.WriteLine("Введенная строка не соответствует формату числа");
         }
         catch (OverflowException e)
         {
@@ -52,7 +52,7 @@ internal class ConsoleUi
 
     private static void PrintWelcome()
     {
-        Console.WriteLine("Приветсвую!");
+        Console.WriteLine("Приветствую!");
     }
     
     private static int GetNumberFromConsole(string nameForVarible)
