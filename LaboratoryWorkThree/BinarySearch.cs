@@ -16,7 +16,7 @@ public class BinarySearch
         uint leftIndex = 0;
         uint rightIndex = lenghtOfArray - 1;
 
-        while (leftIndex <= rightIndex)
+        while (leftIndex < rightIndex)
         {
             if (sortArray[middle] == element) return (int)middle;
             int elementByMiddle = sortArray[middle];
