@@ -1,0 +1,3 @@
+﻿using LaboratoryWorkFour;
+
+ConsoleUi.Run();
