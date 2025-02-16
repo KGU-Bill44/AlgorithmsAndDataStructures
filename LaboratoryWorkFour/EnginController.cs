@@ -6,10 +6,10 @@ public static class EnginController
 {
     private static Engin engin;
 
-    public static void CreateEngin(int lenght)
+    public static void CreateEngin(int length)
     {
         engin = Engin.CreateEngin();
-        engin.FillStackRandomInts(lenght);
+        engin.FillStackRandomInts(length);
     }
 
     public static void PutMaximumAtEnd()
