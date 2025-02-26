@@ -48,7 +48,12 @@ public class ConsoleUi
                         break;
                 }
             }
-            catch (Exception e)
+            catch (EmptyControllerException ex)
+            {
+                Console.WriteLine(ex.Message);
+                PrintInfoTask();
+            }
+            catch (Exception)
             {
                 Console.WriteLine("Ошибка!");
                 PrintInfoTask();
