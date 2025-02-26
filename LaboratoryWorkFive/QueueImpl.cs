@@ -20,7 +20,7 @@ public class QueueImpl<T> : IEnumerable<T>
     {
         head = 0;
         size = items.Length;
-        tail = size;
+        tail = size - 1;
         this.items = items;
     }
 
@@ -34,7 +34,6 @@ public class QueueImpl<T> : IEnumerable<T>
         items[tail] = item;
         MoveNext(ref tail);
         size = size + 1;
-        
     }
 
     private bool IsArrayOverflowing()
@@ -46,16 +45,7 @@ public class QueueImpl<T> : IEnumerable<T>
     {
         int newSize = items.Length + items.Length / 2;
         T[] nextItems = new T[newSize];
-
-        if (head < tail)
-        {
-            Array.Copy(items, head, nextItems, 0, size);
-        }
-        else
-        {
-            Array.Copy(items, head, nextItems, 0, size - head);
-            Array.Copy(items, 0, nextItems, size - head, tail);
-        }
+        CopyQueueTo(nextItems);
 
         items = nextItems;
         tail = size;
@@ -91,14 +81,39 @@ public class QueueImpl<T> : IEnumerable<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        return new QueueIEnumeratorImpl(items);
+        T[] formattedArray = new T[size];
+        CopyQueueTo(formattedArray);
+
+        return new QueueIEnumeratorImpl(formattedArray);
     }
-    
+
+    private void CopyQueueTo(T[] array)
+    {
+        if (head < tail)
+        {
+            Array.Copy(items, head, array, 0, size);
+        }
+        else
+        {
+            Array.Copy(items, head, array, 0, items.Length - head);
+            Array.Copy(items, 0, array, items.Length - head, tail);
+        }
+    }
+
+    public T[] ToArray()
+    {
+        T[] ret = new T[items.Length];
+        items.CopyTo(ret, 0);
+        return ret;
+    }
+
+    public int Count => size;
+
     private class QueueIEnumeratorImpl : IEnumerator<T>
     {
         private T[] array;
         private int currentIndex;
-        
+
         public QueueIEnumeratorImpl(T[] array)
         {
             this.array = array;
