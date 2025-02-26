@@ -27,7 +27,7 @@ public static class QueueImplExtension
             }
         }
 
-        return indexOfMatches + 1 == arrayBySecond.Length;
+        return indexOfMatches == arrayBySecond.Length;
     }
 
     public static void Scale<T>(this QueueImpl<T> first, T scale) where T : IMultiplyOperators<T, T, T>

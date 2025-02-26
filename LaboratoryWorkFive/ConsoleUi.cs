@@ -16,34 +16,42 @@ public class ConsoleUi
             int n = 0;
             int[] ints = null;
 
-            switch (commandIndex)
+            try
             {
-                case 'h':
-                    PrintInfoTask();
-                    break;
-                case '0':
-                    isExit = true;
-                    break;
-                case '1':
-                    n = GetNumberFromConsole("размер очереди");
-                    ints = ReadArrayBy(n);
-                    controller.CreateQueue(ints);
-                    break;
-                case '2':
-                    n = GetNumberFromConsole("размер очереди, которую хотите проверить");
-                    ints = ReadArrayBy(n);
-                    controller.Includes(ints);
-                    break;
-                case '3':
-                    n = GetNumberFromConsole("коэффициент увеличителя");
-                    controller.Scale(n);
-                    break;
-                case '4':
-                    PrintQueue(controller);
-                    break;
-                default:
-                    PrintInfoTask();
-                    break;
+                switch (commandIndex)
+                {
+                    case 'h':
+                        PrintInfoTask();
+                        break;
+                    case '0':
+                        isExit = true;
+                        break;
+                    case '1':
+                        n = GetNumberFromConsole("размер очереди");
+                        ints = ReadArrayBy(n);
+                        controller.CreateQueue(ints);
+                        break;
+                    case '2':
+                        n = GetNumberFromConsole("размер очереди, которую хотите проверить");
+                        ints = ReadArrayBy(n);
+                        Console.WriteLine(controller.Includes(ints));
+                        break;
+                    case '3':
+                        n = GetNumberFromConsole("коэффициент увеличителя");
+                        controller.Scale(n);
+                        break;
+                    case '4':
+                        PrintQueue(controller);
+                        break;
+                    default:
+                        PrintInfoTask();
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Ошибка!");
+                PrintInfoTask();
             }
 
             if (isExit)

@@ -18,9 +18,8 @@ public class QueueImpl<T> : IEnumerable<T>
 
     public QueueImpl(T[] items)
     {
-        head = 0;
+        head = tail = 0;
         size = items.Length;
-        tail = size - 1;
         this.items = items;
     }
 
