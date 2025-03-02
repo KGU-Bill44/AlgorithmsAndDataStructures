@@ -1,3 +1,3 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using LaboratoryWorkSix;
 
-Console.WriteLine("Hello, World!");
+ConsoleUi.Run();
