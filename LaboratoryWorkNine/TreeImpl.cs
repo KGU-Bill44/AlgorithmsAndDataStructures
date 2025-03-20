@@ -125,4 +125,36 @@ public class TreeImpl<T>
 
         return strings;
     }
+
+    public void DeleteNode(params TreeBranch[] path)
+    {
+        if (path.Length == 0)
+        {
+            Clear();
+        }
+
+        TreeBranch lastElement = path[^1];
+        TreeImpl<T> treeNode = GetBranchByPath(path[..^2]);
+        treeNode.Delete(lastElement);
+    }
+
+    public void Delete(TreeBranch lastElement)
+    {
+        switch (lastElement)
+        {
+            case TreeBranch.Left:
+                left = default;
+                break;
+            
+            case TreeBranch.Right:
+                right = default;
+                break;
+        }
+    }
+
+    private void Clear()
+    {
+        left = right = default;
+        data = default;
+    }
 }
