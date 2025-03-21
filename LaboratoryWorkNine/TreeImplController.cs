@@ -1,12 +1,14 @@
-﻿namespace LaboratoryWorkNine;
+﻿using System.Numerics;
 
-public class TreeImplController<T>
+namespace LaboratoryWorkNine;
+
+public class TreeImplController<T> where T : IAdditionOperators<T, T, T>
 {
-    private TreeImpl<T> activeThee;
+    private TreeImplSum<T> activeThee;
 
     public void CreateTree()
     {
-        activeThee = new TreeImpl<T>();
+        activeThee = new TreeImplSum<T>();
     }
 
     public string GetContentString()
@@ -33,5 +35,18 @@ public class TreeImplController<T>
     {
         ThrowIfEmptyTree();
         activeThee.DeleteNode(path);
+    }
+
+    public string GetUnbalancedData()
+    {
+        ThrowIfEmptyTree();
+        List<TreeImpl<T>> list = new List<TreeImpl<T>>();
+        activeThee.FillUnbalancedNodes(list);
+        return string.Join(", ", list.ConvertAll(l => l.Data));
+    }
+
+    public T GetSum()
+    {
+        return activeThee.SumData();
     }
 }

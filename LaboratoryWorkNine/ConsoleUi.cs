@@ -1,4 +1,6 @@
-﻿namespace LaboratoryWorkNine;
+﻿using System.Numerics;
+
+namespace LaboratoryWorkNine;
 
 public static class ConsoleUi
 {
@@ -27,7 +29,7 @@ public static class ConsoleUi
                     case '1':
                         controller.CreateTree();
                         break;
-                    case '2': 
+                    case '2':
                         path = ReadPath();
                         TreeBranch setNode = ReadNodeDirection();
                         int content = GetNumberFromConsole("значение ноды");
@@ -38,13 +40,13 @@ public static class ConsoleUi
                         controller.DeleteNode(path);
                         break;
                     case '4':
-                        
+                        PrintUnbalancedTree(controller);
                         break;
                     case '5':
-                        
+                        PrintSum(controller);
                         break;
                     case '6':
-                        PrintQueue(controller);
+                        PrintTree(controller);
                         break;
                     default:
                         PrintInfoTask();
@@ -69,6 +71,16 @@ public static class ConsoleUi
         }
     }
 
+    private static void PrintSum(TreeImplController<int> controller)
+    {
+        Console.WriteLine(controller.GetSum());
+    }
+
+    private static void PrintUnbalancedTree<T>(TreeImplController<T> controller) where T : IAdditionOperators<T, T, T>
+    {
+        Console.WriteLine(controller.GetUnbalancedData());
+    }
+
     private static TreeBranch ReadNodeDirection()
     {
         Console.WriteLine("Вввдениет П - правйы узел или Л - левый узел. Иначе ошибка.");
@@ -80,7 +92,7 @@ public static class ConsoleUi
 
     private static TreeBranch CharConvert(string nodeS)
     {
-        if (string.IsNullOrWhiteSpace(nodeS) 
+        if (string.IsNullOrWhiteSpace(nodeS)
             || nodeS.Length > 1)
         {
             throw new StringNotCharException();
@@ -112,7 +124,7 @@ public static class ConsoleUi
         List<string> pathAsString = new List<string>(anyString.Split(" "));
         return pathAsString.ConvertAll(CharConvert).ToArray();
     }
-    
+
     private static char ReadCommand()
     {
         Console.Write("Ожидание команды: ");
@@ -130,9 +142,9 @@ public static class ConsoleUi
     {
         Console.Write("Программа читает команду:\n" +
                       "h - выводит справочную информацию\n" +
-                      "1 - создает вводимую пользователем последовательность дека для дальнейших действий\n" +
-                      "2 - сортировка дека \n" +
-                      "3 - группировка дека\n" +
+                      "1 - создает дерево\n" +
+                      "2 - Задает значение ноды по вводимому пути\n" +
+                      "3 - Удаление значение нодыn" +
                       "4 - выводит дек на экран\n" +
                       "0 - выходит из программы\n");
     }
@@ -151,7 +163,7 @@ public static class ConsoleUi
         }
     }
 
-    private static void PrintQueue<T>(TreeImplController<T> controller)
+    private static void PrintTree<T>(TreeImplController<T> controller) where T : IAdditionOperators<T, T, T>
     {
         string contentString = controller.GetContentString();
         Console.WriteLine(contentString);

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Numerics;
+using System.Text;
 
 namespace LaboratoryWorkNine;
 
@@ -88,7 +89,12 @@ public class TreeImpl<T>
             throw new BranchExistsException();
         }
 
-        treeImpl = new TreeImpl<T>(item);
+        treeImpl = CreateTreeNode(item);
+    }
+
+    protected virtual TreeImpl<T> CreateTreeNode(T item)
+    {
+        return new TreeImpl<T>();
     }
 
     public void SwapTree()
@@ -145,7 +151,7 @@ public class TreeImpl<T>
             case TreeBranch.Left:
                 left = default;
                 break;
-            
+
             case TreeBranch.Right:
                 right = default;
                 break;
@@ -156,5 +162,52 @@ public class TreeImpl<T>
     {
         left = right = default;
         data = default;
+    }
+
+    public int FillUnbalancedNodes(List<TreeImpl<T>> l)
+    {
+        if (left != null && right != null)
+        {
+            int sizel = left.FillUnbalancedNodes(l);
+            int sizer = right.FillUnbalancedNodes(l);
+
+            if (sizel != sizer)
+            {
+                l.Add(this);
+            }
+        }
+        else if (left == null && right == null)
+        {
+            return 1;
+        }
+        else
+        {
+            l.Add(this);
+            return 1 + FillUnbalancedNodes(l);
+        }
+
+        return 0;
+    }
+}
+
+public class TreeImplSum<T> : TreeImpl<T> where T : IAdditionOperators<T, T, T>
+{
+    
+    
+    public T SumData()
+    {
+        T sum = this.Data;
+
+        if (Left != null)
+        {
+            sum = sum + ((TreeImplSum<T>)Left).SumData();
+        }
+        
+        if (Right != null)
+        {
+            sum = sum + ((TreeImplSum<T>)Right).SumData();
+        }
+
+        return sum;
     }
 }
