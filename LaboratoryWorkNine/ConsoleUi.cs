@@ -48,6 +48,9 @@ public static class ConsoleUi
                     case '6':
                         PrintTree(controller);
                         break;
+                    case '7':
+                        controller.Swap();
+                        break;
                     default:
                         PrintInfoTask();
                         break;
@@ -71,23 +74,23 @@ public static class ConsoleUi
         }
     }
 
-    private static void PrintSum(TreeImplController<int> controller)
+    private static void PrintSum<T>(TreeImplController<T> controller) where T : IAdditionOperators<T, T, T>
     {
-        Console.WriteLine(controller.GetSum());
+        Console.WriteLine("Сумма элементов: " + controller.GetSum());
     }
 
     private static void PrintUnbalancedTree<T>(TreeImplController<T> controller) where T : IAdditionOperators<T, T, T>
     {
-        Console.WriteLine(controller.GetUnbalancedData());
+        Console.WriteLine("Содержимое не сбалансированных узлов: " + controller.GetUnbalancedData());
     }
 
     private static TreeBranch ReadNodeDirection()
     {
-        Console.WriteLine("Вввдениет П - правйы узел или Л - левый узел. Иначе ошибка.");
+        Console.WriteLine("Вввдениет П - правйы узел или Л - левый узел, для создания " +
+                          "элемента узла. Пустая строка - корень дерева. " +
+                          "Иначе ошибка.");
         string? nodeS = Console.ReadLine();
-        if (nodeS != null) return CharConvert(nodeS);
-
-        throw new EmptyStringException();
+        return !string.IsNullOrWhiteSpace(nodeS) ? CharConvert(nodeS) : TreeBranch.This;
     }
 
     private static TreeBranch CharConvert(string nodeS)
@@ -104,24 +107,23 @@ public static class ConsoleUi
         {
             'Л' => TreeBranch.Left,
             'П' => TreeBranch.Right,
-            _ => throw new ArgumentException()
+            _ => throw new ArgumentException("Сивол не Л и не П.")
         };
     }
 
     private static TreeBranch[] ReadPath()
     {
         Console.WriteLine(
-            "Для построения пути к узнул, необходимо поочережно, перез пробел вводить П - правйы узел или Л - левый узел.\n"
+            "Для построения пути к узнул, необходимо поочережно, " +
+            "перез пробел вводить П - правйы узел или Л - левый узел. " +
+            "Пустая строка воспринимается как корень дерева."
         );
 
         string? anyString = Console.ReadLine();
 
-        if (string.IsNullOrWhiteSpace(anyString))
-        {
-            throw new EmptyStringException();
-        }
-
-        List<string> pathAsString = new List<string>(anyString.Split(" "));
+        List<string> pathAsString = !string.IsNullOrWhiteSpace(anyString)
+            ? new List<string>(anyString.Split(" "))
+            : new List<string>();
         return pathAsString.ConvertAll(CharConvert).ToArray();
     }
 
@@ -143,9 +145,12 @@ public static class ConsoleUi
         Console.Write("Программа читает команду:\n" +
                       "h - выводит справочную информацию\n" +
                       "1 - создает дерево\n" +
-                      "2 - Задает значение ноды по вводимому пути\n" +
-                      "3 - Удаление значение нодыn" +
-                      "4 - выводит дек на экран\n" +
+                      "2 - задает значение ноды по вводимому пути (сам путь, выбрать сторону дерева, значение)\n" +
+                      "3 - удаление значение ноды по вводимиму пути \n" +
+                      "4 - выводит значение несбалансированных узлов дерева\n" +
+                      "5 - выводит сумму элементов дерева\n" +
+                      "6 - выводит дерево на экран\n" +
+                      "7 - инвертироует дерево\n" +
                       "0 - выходит из программы\n");
     }
 

@@ -49,4 +49,10 @@ public class TreeImplController<T> where T : IAdditionOperators<T, T, T>
     {
         return activeThee.SumData();
     }
+
+    public void Swap()
+    {
+        ThrowIfEmptyTree();
+        activeThee.SwapTree();
+    }
 }

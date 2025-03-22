@@ -1,5 +1,5 @@
 ﻿namespace LaboratoryWorkNine;
 
-public class EmptyStringException : Exception
+public class EmptyStringException() : Exception("Пустаная строка")
 {
 }

@@ -1,5 +1,5 @@
 ﻿namespace LaboratoryWorkNine;
 
-public class TreeNullException : Exception
+public class TreeNullException() : Exception("Дерево не установленно")
 {
 }
