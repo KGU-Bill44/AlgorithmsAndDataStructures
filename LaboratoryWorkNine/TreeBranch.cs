@@ -2,5 +2,5 @@
 
 public enum TreeBranch
 {
-    Left, Right
+    Left, Right, This
 }

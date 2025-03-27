@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Numerics;
+using System.Text;
 
 namespace LaboratoryWorkNine;
 
@@ -38,6 +39,9 @@ public class TreeImpl<T>
                 break;
             case TreeBranch.Right:
                 branchByPath.SetDataOnRight(item);
+                break;
+            case TreeBranch.This:
+                this.Data = item;
                 break;
         }
     }
@@ -85,10 +89,16 @@ public class TreeImpl<T>
     {
         if (treeImpl != null)
         {
-            throw new BranchExistsException();
+            treeImpl.Data = item;
+            return;
         }
 
-        treeImpl = new TreeImpl<T>(item);
+        treeImpl = CreateTreeNode(item);
+    }
+
+    protected virtual TreeImpl<T> CreateTreeNode(T item)
+    {
+        return new TreeImpl<T>(item);
     }
 
     public void SwapTree()
@@ -112,16 +122,16 @@ public class TreeImpl<T>
         return ToString(strings).ToString();
     }
 
-    private StringBuilder ToString(StringBuilder strings, int size = 0)
+    private StringBuilder ToString(StringBuilder strings, int size = 0, string side = "")
     {
         for (int i = 0; i < size; i++)
         {
             strings.Append('\t');
         }
 
-        strings.Append(data).Append('\n');
-        left?.ToString(strings, size + 1);
-        right?.ToString(strings, size + 1);
+        strings.Append(side).Append(data).Append('\n');
+        left?.ToString(strings, size + 1, "Л - ");
+        right?.ToString(strings, size + 1, "П - ");
 
         return strings;
     }
@@ -131,10 +141,17 @@ public class TreeImpl<T>
         if (path.Length == 0)
         {
             Clear();
+            return;
         }
 
         TreeBranch lastElement = path[^1];
-        TreeImpl<T> treeNode = GetBranchByPath(path[..^2]);
+        TreeImpl<T> treeNode = this;
+
+        if (path.Length > 1)
+        {
+            treeNode = GetBranchByPath(path[..^1]);
+        }
+
         treeNode.Delete(lastElement);
     }
 
@@ -145,7 +162,7 @@ public class TreeImpl<T>
             case TreeBranch.Left:
                 left = default;
                 break;
-            
+
             case TreeBranch.Right:
                 right = default;
                 break;
@@ -156,5 +173,63 @@ public class TreeImpl<T>
     {
         left = right = default;
         data = default;
+    }
+
+    public int FillUnbalancedNodes(List<TreeImpl<T>> l)
+    {
+        if (left != null && right != null)
+        {
+            int sizel = left.FillUnbalancedNodes(l);
+            int sizer = right.FillUnbalancedNodes(l);
+
+            if (sizel != sizer)
+            {
+                l.Add(this);
+            }
+
+            return sizel + sizer + 1;
+        }
+        else if (left == null && right == null)
+        {
+            return 0;
+        }
+        else
+        {
+            l.Add(this);
+            return 1 + (left?.FillUnbalancedNodes(l) ?? right.FillUnbalancedNodes(l));
+        }
+    }
+}
+
+public class TreeImplSum<T> : TreeImpl<T> where T : IAdditionOperators<T, T, T>
+{
+    public TreeImplSum()
+    {
+    }
+
+    public TreeImplSum(T data) : base(data)
+    {
+    }
+
+    protected override TreeImpl<T> CreateTreeNode(T item)
+    {
+        return new TreeImplSum<T>(item);
+    }
+
+    public T SumData()
+    {
+        T sum = this.Data;
+
+        if (Left != null)
+        {
+            sum = sum + ((TreeImplSum<T>)Left).SumData();
+        }
+
+        if (Right != null)
+        {
+            sum = sum + ((TreeImplSum<T>)Right).SumData();
+        }
+
+        return sum;
     }
 }

@@ -1,5 +1,5 @@
 ﻿namespace LaboratoryWorkNine;
 
-internal class StringNotCharException : Exception
+internal class StringNotCharException() : Exception("Строка не является отдельным символом")
 {
 }
