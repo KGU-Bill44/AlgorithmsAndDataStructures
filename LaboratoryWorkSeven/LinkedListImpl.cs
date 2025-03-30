@@ -301,7 +301,7 @@ public class OutcastLinker<T> : LinkedListImpl<T>
             default:
                 int index = 1;
                 NodeListImpl<T> firstNode = head;
-                NodeListImpl<T> middleNode = head.Next;
+                NodeListImpl<T> middleNode = firstNode.Next;
                 NodeListImpl<T> lastNode = middleNode.Next;
 
                 while (index < size)
@@ -317,9 +317,9 @@ public class OutcastLinker<T> : LinkedListImpl<T>
                     }
 
                     index = index + 1;
-                    firstNode = middleNode;
-                    middleNode = lastNode;
-                    lastNode = lastNode.Next;
+                    firstNode = firstNode.Next;
+                    middleNode = firstNode.Next;
+                    lastNode = middleNode.Next;
                 }
 
                 break;
