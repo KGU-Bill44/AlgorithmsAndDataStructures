@@ -140,7 +140,7 @@ public class LinkedListImpl<T> : IEnumerable<T>
         }
         else
         {
-            Insert(item, beforeIndex - 1);
+            Insert(item, beforeIndex);
         }
     }
 
@@ -159,7 +159,7 @@ public class LinkedListImpl<T> : IEnumerable<T>
     protected void Insert(T item, int index)
     {
         ThrowIfIndexOutOfRangeException(index);
-        NodeListImpl<T> previousNode = GetNodeAt(index);
+        NodeListImpl<T> previousNode = GetNodeAt(index - 1);
         NodeListImpl<T> nextNode = previousNode.Next;
         previousNode.Next = new NodeListImpl<T>(item, nextNode);
         size = size + 1;
@@ -299,27 +299,21 @@ public class OutcastLinker<T> : LinkedListImpl<T>
                     RemoveAfter(0);
                 break;
             default:
-                int index = 1;
+                int index = 0;
                 NodeListImpl<T> firstNode = head;
                 NodeListImpl<T> middleNode = firstNode.Next;
-                NodeListImpl<T> lastNode = middleNode.Next;
 
-                while (index < size)
+                while (index < size - 1)
                 {
-                    if (Object.Equals(firstNode.Data, middleNode.Data))
-                    {
-                        RemoveAt(index - 1);
-                    }
-
-                    if (Object.Equals(middleNode.Data, lastNode.Data))
+                    while (middleNode != null && Object.Equals(firstNode.Data, middleNode.Data))
                     {
                         RemoveAt(index + 1);
+                        middleNode = firstNode.Next;
                     }
 
                     index = index + 1;
                     firstNode = firstNode.Next;
-                    middleNode = firstNode.Next;
-                    lastNode = middleNode.Next;
+                    middleNode = firstNode?.Next;
                 }
 
                 break;
