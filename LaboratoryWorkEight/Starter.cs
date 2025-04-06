@@ -1,0 +1,3 @@
+﻿using LaboratoryWorkEight;
+
+ConsoleUi.Run();
