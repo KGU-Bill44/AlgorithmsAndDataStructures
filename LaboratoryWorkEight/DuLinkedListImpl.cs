@@ -73,7 +73,7 @@ public class DuLinkedListImpl<T> : IEnumerable<T>
         StringBuilder stringBuilder = new StringBuilder();
 
         NodeListImpl<T> currentNode = head;
-        while (currentNode.Next != null)
+        while (currentNode != null)
         {
             stringBuilder.Append(currentNode.Data).Append(' ');
             currentNode = currentNode.Next;
@@ -87,7 +87,7 @@ public class DuLinkedListImpl<T> : IEnumerable<T>
         StringBuilder stringBuilder = new StringBuilder();
 
         NodeListImpl<T> currentNode = tail;
-        while (currentNode.Previous != null)
+        while (currentNode != null)
         {
             stringBuilder.Append(currentNode.Data).Append(' ');
             currentNode = currentNode.Previous;
@@ -142,7 +142,7 @@ public class DuLinkedListImpl<T> : IEnumerable<T>
         else
         {
             currentNode = tail;
-            for (int elementIndex = 0; elementIndex != index; elementIndex++)
+            for (int elementIndex = size - 1; elementIndex != index; elementIndex--)
             {
                 currentNode = currentNode.Previous;
             }
