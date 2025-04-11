@@ -73,11 +73,12 @@ public static class ConsoleUi
                         controller.RemoveAfter(index);
                         break;
                     case 't':
-                        number = GetNumberFromConsole("число, которое хотите вставить в середину");
-                        controller.InsertIfEven(number);
+                        List<int> ints = ReadInts("целых числил");
+                        bool result = controller.ContainsAll(ints);
+                        PrintBoolResult(result);
                         break;
                     case 'n':
-                        controller.RemoveEqualNeighbors();
+                        controller.Sort();
                         break;
                 }
             }
@@ -94,15 +95,13 @@ public static class ConsoleUi
         Console.WriteLine(contains ? "Да" : "Нет");
     }
 
-    private static void PrintList<T>(LinkedListImplController<T> controller)
+    private static void PrintList<T>(LinkedListImplController<T> controller) where T : IComparable
     {
-        
         Console.WriteLine(controller.GetListString());
     }
-    
-    private static void PrintReversList<T>(LinkedListImplController<T> controller)
+
+    private static void PrintReversList<T>(LinkedListImplController<T> controller) where T : IComparable
     {
-        
         Console.WriteLine(controller.GetReversListString());
     }
 
@@ -116,7 +115,7 @@ public static class ConsoleUi
         Console.Write(
             "Программа читает команду:\n" +
             "h - выводит справочную информацию\n" +
-            "1 - создает двухнарпавленный список массив\n" +
+            "1 - создает двунаправленный список массив\n" +
             "2 - добавляет в начало вводимое пользователем число\n" +
             "3 - добавляет в конец вводимое пользователем число\n" +
             "p - выводит список на экран\n" +
@@ -129,8 +128,8 @@ public static class ConsoleUi
             "l - удаляет последний элемент из списка\n" +
             "a - удаляет элемент после указанного индекса\n" +
             "b - удаляет элемент перед указанным индексом удаляет\n" +
-            "t - ...\n" +
-            "n - ...\n" +
+            "t - является ли массив, подмассивом в листе\n" +
+            "n - сортирует массив\n" +
             "0 - выходит из программы\n");
     }
 
@@ -147,5 +146,32 @@ public static class ConsoleUi
         Console.Write($"Введите {nameForVariable}: ");
         string anyString = Console.ReadLine();
         return int.Parse(anyString);
+    }
+
+    private static List<int> ReadInts(string arrayNumberName)
+    {
+        Console.Write($"Введите массив {arrayNumberName}: ");
+        List<int> ints = new List<int>();
+
+        bool isStringEmpty = true;
+
+        do
+        {
+            try
+            {
+                string anyString = Console.ReadLine();
+                isStringEmpty = string.IsNullOrWhiteSpace(anyString);
+                if (!isStringEmpty)
+                {
+                    ints.Add(int.Parse(anyString));
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Ошибка, не число!");
+            }
+        } while (!isStringEmpty);
+
+        return ints;
     }
 }

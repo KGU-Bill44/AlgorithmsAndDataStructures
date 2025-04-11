@@ -1,6 +1,6 @@
-﻿namespace  LaboratoryWorkEight;
+﻿namespace LaboratoryWorkEight;
 
-public class LinkedListImplController<T>
+public class LinkedListImplController<T> where T : IComparable
 {
     private DuLinkedListImpl<T> list;
 
@@ -26,7 +26,7 @@ public class LinkedListImplController<T>
         ThrowIfListNotExist();
         return list.ToString();
     }
-    
+
     public string GetReversListString()
     {
         ThrowIfListNotExist();
@@ -81,9 +81,10 @@ public class LinkedListImplController<T>
         list.RemoveAfter(index);
     }
 
-    public void RemoveEqualNeighbors()
+    public void Sort()
     {
         ThrowIfListNotExist();
+        list.Sort();
     }
 
     private void ThrowIfListNotExist()
@@ -94,8 +95,8 @@ public class LinkedListImplController<T>
         }
     }
 
-    public void InsertIfEven(T element)
+    public bool ContainsAll(IEnumerable<T> enumerable)
     {
-        
+        return list.ContainsAll(enumerable);
     }
 }
