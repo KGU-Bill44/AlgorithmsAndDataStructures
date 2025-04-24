@@ -46,13 +46,14 @@ public static class ConsoleUi
                         writer.Close();
                         break;
                 }
+                Console.Clear();
             }
             catch (Exception e)
             {
+                Console.Clear();
                 Console.WriteLine("Ошибка: " + e.Message);
-                break;
             }
-            Console.Clear();
+            
         } while (!ExitCommandKey.Equals(commandKey));
     }
 
