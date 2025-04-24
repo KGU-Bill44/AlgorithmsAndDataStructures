@@ -1,0 +1,3 @@
+﻿using LaboratoryWorkTen;
+
+ConsoleUi.Run();
