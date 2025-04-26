@@ -22,8 +22,7 @@ public class Regal
 
     public string ReplaceDate(string s)
     {
-        SortedDictionary<char, int> chars = new SortedDictionary<char, int>();
-        Regex regex = new Regex("(\\d\\d)\\/(\\d\\d)\\/(\\d\\d)");
-        return regex.Replace(s, "($1):($2):($:3)");
+        Regex regex = new Regex(@"(\d\d)\/(\d\d)\/\d\d(\d\d)");
+        return regex.Replace(s, "$1:$2:$3");
     }
 }
