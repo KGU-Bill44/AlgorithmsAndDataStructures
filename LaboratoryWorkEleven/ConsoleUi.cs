@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LaboratoryWorkEleven;
 
@@ -10,6 +11,7 @@ public class ConsoleUi
         Console.WriteLine("Программа читает кириллический текстовый файл и выводит все слова и их анаграммы.");
 
         FileInfo fileForRead = GetFile("к файлу");
+        Regex regex = new Regex("^[А-Яа-яёЁ]+$");
         Dictionary<string, List<string>> wordAndAnagrams = new Dictionary<string, List<string>>();
 
         if (!fileForRead.Exists)
@@ -20,9 +22,9 @@ public class ConsoleUi
         using (TextReader reader = fileForRead.OpenText())
         {
             string word = reader.ReadLine();
-            while (!string.IsNullOrWhiteSpace(word))
+            while (!string.IsNullOrWhiteSpace(word) && regex.IsMatch(word))
             {
-                wordAndAnagrams.Add(word, GenerateAnagrams(word));
+                wordAndAnagrams.Add(word, GetAnagrams(word));
                 word = reader.ReadLine();
             }
         }
@@ -32,22 +34,25 @@ public class ConsoleUi
         {
             builder.AppendLine($"{pair.Key} - {string.Join(' ', pair.Value)}");
         }
-        
+
         Console.WriteLine(builder.ToString());
     }
-    
+
     private static FileInfo GetFile(string desc)
     {
         Console.WriteLine("Введите полный путь " + desc + ":");
         return new FileInfo(Console.ReadLine() ?? string.Empty);
     }
-    
+
+    #region Trash
+
     public static List<string> GenerateAnagrams(string word)
     {
         if (string.IsNullOrEmpty(word))
         {
             return new List<string> { "" };
         }
+
         char[] charArray = word.ToCharArray();
         Array.Sort(charArray);
         List<string> anagrams = new List<string>();
@@ -75,6 +80,8 @@ public class ConsoleUi
     {
         (chars[i], chars[j]) = (chars[j], chars[i]);
     }
+
+    #endregion
 
     #region MyImpl
 
@@ -104,9 +111,9 @@ public class ConsoleUi
             char anyChar = chars[i];
             currentWord = currentWord.Append(anyChar);
             chars.Remove(anyChar);
-            GetAnagramsByChars(chars, currentWord, resultAnagrams);
+            GetAnagramsByChars(new List<char>(chars), currentWord, resultAnagrams);
             currentWord = currentWord.Remove(currentWord.Length - 1, 1);
-            chars.Add(anyChar);
+            chars.Insert(i, anyChar);
         }
     }
 
