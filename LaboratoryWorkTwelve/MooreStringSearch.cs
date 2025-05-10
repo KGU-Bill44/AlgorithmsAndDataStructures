@@ -10,7 +10,7 @@ public class MooreStringSearch
         int currentPatternIndex = pattern.Length - 1;
         int currentFullStringIndex = startIndexOfFullString + currentPatternIndex;
 
-        if (pattern.Length > fullString.Length)
+        if (pattern.Length == 0 || pattern.Length > fullString.Length)
         {
             return;
         }

@@ -42,6 +42,11 @@ public partial class MainWindow : Form
 
     private void FindSubString(object sender, EventArgs e)
     {
+        FindSubString();
+    }
+
+    private void FindSubString()
+    {
         ViewText.SelectAll();
         ViewText.SelectionBackColor = ViewText.BackColor;
 
@@ -50,7 +55,12 @@ public partial class MainWindow : Form
         foreach (var search in mooreStringSearch.Searches)
         {
             ViewText.Select(search.Key, search.Value);
-            ViewText.SelectionBackColor = Color.LightYellow;
+            ViewText.SelectionBackColor = Color.Yellow;
         }
+    }
+
+    private void TextChanged(object sender, EventArgs e)
+    {
+        FindSubString();
     }
 }

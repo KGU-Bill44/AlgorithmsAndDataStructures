@@ -65,6 +65,7 @@ partial class MainWindow
         patternStringTextBox.Name = "patternStringTextBox";
         patternStringTextBox.Size = new Size(246, 23);
         patternStringTextBox.TabIndex = 0;
+        patternStringTextBox.TextChanged += TextChanged;
         // 
         // tableLayoutPanel2
         // 
