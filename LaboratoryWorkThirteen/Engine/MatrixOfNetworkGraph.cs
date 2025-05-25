@@ -1,20 +1,30 @@
 ﻿using LaboratoryWorkThirteen.GraphException;
 
-namespace LaboratoryWorkThirteen;
+namespace LaboratoryWorkThirteen.Engine;
 
-public class MatrixOfGraph
+public class MatrixOfNetworkGraph
 {
-    private List<GraphNode> nodes;
+    private NetworkGraph graph;
 
-    public MatrixOfGraph(int[,] matrixGraph)
+    public MatrixOfNetworkGraph(int[,] matrixGraph)
     {
         if (matrixGraph.GetLength(0) != matrixGraph.GetLength(1))
         {
             throw new NotSquareMatrixGraphException();
         }
 
+        graph = new NetworkGraph();
+
         SetNodes(matrixGraph);
         SetGraph(matrixGraph);
+    }
+
+    private void SetNodes(int[,] matrixGraph)
+    {
+        for (int number = 0; number < matrixGraph.GetLength(0); number++)
+        {
+            graph.AddNode(new GraphNode(number));
+        }
     }
 
     protected virtual void SetGraph(int[,] matrixGraph)
@@ -25,27 +35,14 @@ public class MatrixOfGraph
             {
                 if (matrixGraph[x, y] != 0)
                 {
-                    nodes[x].DegOut.Add(nodes[y]);
-                    nodes[y].DegIn++;
+                    graph.AddEdge(graph[x], graph[y]);
                 }
             }
         }
     }
 
-    private void SetNodes(int[,] matrixGraph)
+    public NetworkGraph GetGraph()
     {
-        List<GraphNode> nodes = new List<GraphNode>();
-
-        for (int number = 0; number < matrixGraph.GetLength(0); number++)
-        {
-            nodes.Add(new GraphNode(number));
-        }
-
-        this.nodes = nodes;
-    }
-
-    public IEnumerable<GraphNode> GetGraph()
-    {
-        return nodes;
+        return graph;
     }
 }

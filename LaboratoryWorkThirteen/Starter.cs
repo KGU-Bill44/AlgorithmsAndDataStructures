@@ -1,13 +1,15 @@
-﻿// See https://aka.ms/new-console-template for more information
+using LaboratoryWorkThirteen.WindowController;
 
-using LaboratoryWorkThirteen;
+namespace LaboratoryWorkThirteen;
 
-MatrixOfGraph graph = new MatrixOfGraph(
-    new int[,]
+public static class Starter
+{
+    public readonly static int COUNT_READ_CHAR = 1024;
+
+    [STAThread]
+    static void Main()
     {
-        { 0, 0, 1, 0, 0 },
-        { 1, 0, 0, 0, 0 },
-        { 0, 1, 0, 0, 1 },
-        { 0, 0, 1, 0, 0 },
-        { 0, 1, 0, 0, 0 }
-    });
+        ApplicationConfiguration.Initialize();
+        Application.Run(new MainWindow(new MainWindowController()));
+    }
+}

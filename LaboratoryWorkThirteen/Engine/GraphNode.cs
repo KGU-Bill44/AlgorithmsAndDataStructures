@@ -1,4 +1,6 @@
-﻿namespace LaboratoryWorkThirteen;
+﻿using System.Collections.ObjectModel;
+
+namespace LaboratoryWorkThirteen.Engine;
 
 public class GraphNode
 {
@@ -18,11 +20,18 @@ public class GraphNode
     }
 
     public int Number => number;
-    public List<GraphNode> DegOut => degOut;
+    public IReadOnlyList<GraphNode> DegOut => new ReadOnlyCollection<GraphNode>(degOut);
+    public int DegIn => degIn;
 
-    public int DegIn
+    public void AddNode(GraphNode node)
     {
-        get => degIn;
-        set => degIn = value;
+        degOut.Add(node);
+        node.degIn++;
+    }
+
+    public void RemoveNode(GraphNode node)
+    {
+        degOut.Remove(node);
+        node.degIn--;
     }
 }

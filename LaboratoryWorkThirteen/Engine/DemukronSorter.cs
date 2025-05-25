@@ -1,4 +1,4 @@
-﻿namespace LaboratoryWorkThirteen;
+﻿namespace LaboratoryWorkThirteen.Engine;
 
 public class DemukronSorter : ISorterNetworkGraph
 {
