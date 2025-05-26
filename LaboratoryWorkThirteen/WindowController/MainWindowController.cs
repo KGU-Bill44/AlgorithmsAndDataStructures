@@ -11,7 +11,8 @@ namespace LaboratoryWorkThirteen.WindowController
                 throw new ArgumentNullException(nameof(matrixString), "Строка не может быть пустой.");
             }
 
-            string[] rows = matrixString.Split(new[] { Environment.NewLine, "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] rows = matrixString.Split(new[] { Environment.NewLine, "\n", "\r" },
+                StringSplitOptions.RemoveEmptyEntries);
 
             if (rows.Length == 0)
             {
@@ -44,18 +45,19 @@ namespace LaboratoryWorkThirteen.WindowController
                     }
                     else
                     {
-                        throw new FormatException($"На позиции {i + 1}, {j + 1} встретился отличнвй от 0 или 1 символ {c}.");
+                        throw new FormatException(
+                            $"На позиции {i + 1}, {j + 1} встретился отличнвй от 0 или 1 символ {c}.");
                     }
                 }
             }
+
             return matrix;
         }
 
         public List<GraphNode> SortGraph(string anyMatrixString)
         {
             int[,] adjacencyMatrix = ParseMatrixFromString(anyMatrixString);
-            NetworkGraph networkGraph = new MatrixOfNetworkGraph(adjacencyMatrix).GetGraph();
-            ISorterNetworkGraph sorterNetwork = new DemukronSavingSorter(networkGraph);
+            IDemukronSorter sorterNetwork = new DemukronUnsavingSorter(new MatrixOfNetworkGraph(adjacencyMatrix));
 
             return sorterNetwork.Sort();
         }

@@ -31,7 +31,14 @@ public class GraphNode
 
     public void RemoveNode(GraphNode node)
     {
-        degOut.Remove(node);
-        node.degIn--;
+        if (degOut.Remove(node))
+        {
+            node.degIn--;
+        }
+    }
+
+    public void Clear()
+    {
+        degOut.ForEach(ng => ng.degIn--);
     }
 }

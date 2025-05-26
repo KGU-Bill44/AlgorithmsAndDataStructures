@@ -39,6 +39,7 @@ public class NetworkGraph
             return;
         }
         
+        node.Clear();
         foreach (var otherNode in nodes)
         {
             otherNode.RemoveNode(node);
@@ -60,11 +61,6 @@ public class NetworkGraph
     public virtual IReadOnlyList<GraphNode> GetNodes()
     {
         return new ReadOnlyCollection<GraphNode>(nodes);
-    }
-
-    public virtual IEnumerable<GraphNode> GetNeighbors(GraphNode node)
-    {
-        return node.DegOut;
     }
 
     public GraphNode this[int index] => nodes[index];

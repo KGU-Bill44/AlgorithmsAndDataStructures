@@ -1,6 +1,6 @@
 ﻿namespace LaboratoryWorkThirteen.Engine;
 
-public class DemukronSavingSorter : ISorterNetworkGraph
+public class DemukronSavingSorter : IDemukronSorter
 {
     private NetworkGraph originalGraph;
     private int level = 0;

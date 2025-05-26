@@ -1,6 +1,6 @@
 ﻿namespace LaboratoryWorkThirteen.Engine;
 
-public interface ISorterNetworkGraph
+public interface IDemukronSorter
 {
     public List<GraphNode> Sort();
 }
