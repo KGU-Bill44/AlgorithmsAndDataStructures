@@ -4,7 +4,7 @@ namespace LaboratoryWorkThirteen;
 
 public static class Starter
 {
-    public readonly static int COUNT_READ_CHAR = 1024;
+    public static readonly int COUNT_READ_CHAR = 1024;
 
     [STAThread]
     static void Main()

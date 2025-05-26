@@ -52,7 +52,7 @@ partial class MainWindow
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-        tableLayoutPanel1.Size = new Size(800, 450);
+        tableLayoutPanel1.Size = new Size(834, 450);
         tableLayoutPanel1.TabIndex = 0;
         // 
         // loadFileButton
@@ -71,7 +71,7 @@ partial class MainWindow
         graphPanel.Dock = DockStyle.Fill;
         graphPanel.Location = new Point(3, 43);
         graphPanel.Name = "graphPanel";
-        graphPanel.Size = new Size(794, 281);
+        graphPanel.Size = new Size(828, 281);
         graphPanel.TabIndex = 1;
         graphPanel.TabStop = false;
         graphPanel.Paint += GraphPanelPaint;
@@ -81,7 +81,7 @@ partial class MainWindow
         sortedListPanel.Dock = DockStyle.Fill;
         sortedListPanel.Location = new Point(3, 330);
         sortedListPanel.Name = "sortedListPanel";
-        sortedListPanel.Size = new Size(794, 117);
+        sortedListPanel.Size = new Size(828, 117);
         sortedListPanel.TabIndex = 2;
         sortedListPanel.TabStop = false;
         sortedListPanel.Paint += SortedListPanelPrint;
@@ -90,8 +90,9 @@ partial class MainWindow
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(800, 450);
+        ClientSize = new Size(834, 450);
         Controls.Add(tableLayoutPanel1);
+        MinimumSize = new Size(850, 200);
         Name = "MainWindow";
         Text = "MainWindow";
         tableLayoutPanel1.ResumeLayout(false);

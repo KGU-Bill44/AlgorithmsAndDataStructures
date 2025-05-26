@@ -179,9 +179,9 @@ public partial class MainWindow : Form
 
         float nodeStep = Math.Max(sortedListPanel.Width / (controller.SortList.Count + 1), 55);
         float yPosition = sortedListPanel.Height / 2;
-        float yAcrPosition = yPosition - 50 + radiusNode;
+        int maxValueRandom = Math.Max((int)yPosition - radiusNode, 1);
         Dictionary<GraphNode, float> nodePosition = new Dictionary<GraphNode, float>();
-
+        Random random = new Random();
 
         for (int i = 1; i <= controller.SortList.Count; i++)
         {
@@ -194,6 +194,9 @@ public partial class MainWindow : Form
             float xSourcePosition = nodePosition[source];
             for (int i = 0; i < source.DegOut.Count; i++)
             {
+                float randomSeed = random.Next(1, maxValueRandom);
+                float yAcrPosition = Math.Max(yPosition - randomSeed, 1);
+
                 GraphNode target = source.DegOut[i];
                 float xTargetPosition = nodePosition[target];
                 float angil = 180 * (i % 2);
@@ -204,7 +207,7 @@ public partial class MainWindow : Form
 
                 e.Graphics.DrawArc(arcPen,
                     new RectangleF(xSourcePosition + radiusNode, yAcrPosition + radiusNode,
-                        xTargetPosition - xSourcePosition, 30 * 2), angil, 180);
+                        xTargetPosition - xSourcePosition, randomSeed * 2), angil, 180);
             }
         }
 
