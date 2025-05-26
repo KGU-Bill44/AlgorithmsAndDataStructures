@@ -6,13 +6,13 @@ namespace LaboratoryWorkThirteen;
 
 public partial class MainWindow : Form
 {
-    private MainWindowController controller;
+    private readonly MainWindowController controller;
 
-    private Font nodeFont = new Font("Arial", 20);
-    private SolidBrush textBrush = new SolidBrush(Color.Black);
-    private SolidBrush nodeBrush = new SolidBrush(Color.Yellow);
-    private Pen edgePen = new Pen(Color.Brown, 5);
-    private int radiusNode = 20;
+    private readonly Font nodeFont = new Font("Arial", 20);
+    private readonly SolidBrush textBrush = new SolidBrush(Color.Black);
+    private readonly SolidBrush nodeBrush = new SolidBrush(Color.Yellow);
+    private readonly Pen edgePen = new Pen(Color.Brown, 5);
+    private readonly int radiusNode = 20;
 
     public MainWindow(MainWindowController controller)
     {
@@ -79,7 +79,6 @@ public partial class MainWindow : Form
         }
 
         int levelSpacing = Math.Max(graphPanel.Width / (controller.Sorter.NodesDistributedByLevels.Count + 1), 135);
-
         var dictionary = controller.Sorter.NodesDistributedByLevels.OrderBy(p => p.Key);
         Dictionary<GraphNode, PointF> nodePositions = CalculatePosition(e, dictionary, levelSpacing);
 
@@ -179,8 +178,8 @@ public partial class MainWindow : Form
         }
 
         float nodeStep = Math.Max(sortedListPanel.Width / (controller.SortList.Count + 1), 55);
-        float yPostion = sortedListPanel.Height / 2;
-        float yAcrPostion = yPostion - 50 + radiusNode;
+        float yPosition = sortedListPanel.Height / 2;
+        float yAcrPosition = yPosition - 50 + radiusNode;
         Dictionary<GraphNode, float> nodePosition = new Dictionary<GraphNode, float>();
 
 
@@ -201,18 +200,18 @@ public partial class MainWindow : Form
                 Pen arcPen =
                     new Pen(
                         Color.FromArgb((int)xTargetPosition % 255, (target.Number + source.Number) * 25 % 255,
-                            (int)(yAcrPostion * i) % 255), 5);
+                            (int)(yAcrPosition * i) % 255), 5);
 
                 e.Graphics.DrawArc(arcPen,
-                    new RectangleF(xSourcePosition + radiusNode, yAcrPostion + radiusNode,
+                    new RectangleF(xSourcePosition + radiusNode, yAcrPosition + radiusNode,
                         xTargetPosition - xSourcePosition, 30 * 2), angil, 180);
             }
         }
 
         for (int i = 1; i <= controller.SortList.Count; i++)
         {
-            e.Graphics.FillEllipse(nodeBrush, nodeStep * i, yPostion, radiusNode * 2, radiusNode * 2);
-            e.Graphics.DrawString($"{controller.SortList[i - 1].Number}", nodeFont, textBrush, nodeStep * i, yPostion);
+            e.Graphics.FillEllipse(nodeBrush, nodeStep * i, yPosition, radiusNode * 2, radiusNode * 2);
+            e.Graphics.DrawString($"{controller.SortList[i - 1].Number}", nodeFont, textBrush, nodeStep * i, yPosition);
         }
     }
 }
