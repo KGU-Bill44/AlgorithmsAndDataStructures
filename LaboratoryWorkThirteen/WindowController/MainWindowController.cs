@@ -1,5 +1,4 @@
 ﻿using LaboratoryWorkThirteen.Engine;
-using System.Drawing.Drawing2D;
 
 namespace LaboratoryWorkThirteen.WindowController
 {
@@ -56,8 +55,9 @@ namespace LaboratoryWorkThirteen.WindowController
         {
             int[,] adjacencyMatrix = ParseMatrixFromString(anyMatrixString);
             NetworkGraph networkGraph = new MatrixOfNetworkGraph(adjacencyMatrix).GetGraph();
+            ISorterNetworkGraph sorterNetwork = new DemukronSavingSorter(networkGraph);
 
-            return null;
+            return sorterNetwork.Sort();
         }
     }
 }

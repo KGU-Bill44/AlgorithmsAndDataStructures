@@ -5,6 +5,7 @@ namespace LaboratoryWorkThirteen.Engine;
 public class MatrixOfNetworkGraph
 {
     private NetworkGraph graph;
+    private int[,] matrixGraph;
 
     public MatrixOfNetworkGraph(int[,] matrixGraph)
     {
@@ -13,15 +14,22 @@ public class MatrixOfNetworkGraph
             throw new NotSquareMatrixGraphException();
         }
 
+        this.matrixGraph = matrixGraph;
+    }
+
+    public NetworkGraph GetGraph()
+    {
         graph = new NetworkGraph();
 
         SetNodes(matrixGraph);
         SetGraph(matrixGraph);
+
+        return graph;
     }
 
     private void SetNodes(int[,] matrixGraph)
     {
-        for (int number = 0; number < matrixGraph.GetLength(0); number++)
+        for (int number = 1; number <= matrixGraph.GetLength(0); number++)
         {
             graph.AddNode(new GraphNode(number));
         }
@@ -39,10 +47,5 @@ public class MatrixOfNetworkGraph
                 }
             }
         }
-    }
-
-    public NetworkGraph GetGraph()
-    {
-        return graph;
     }
 }

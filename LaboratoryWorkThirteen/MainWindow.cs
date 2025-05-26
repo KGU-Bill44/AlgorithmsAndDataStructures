@@ -1,3 +1,4 @@
+using LaboratoryWorkThirteen.Engine;
 using LaboratoryWorkThirteen.WindowController;
 using System.Text;
 
@@ -17,7 +18,7 @@ public partial class MainWindow : Form
     {
         if (ReadStringFromFile(out string resultString))
         {
-            controller.SortGraph(resultString);
+            List<GraphNode> graphNodes = controller.SortGraph(resultString);
         }
     }
 
