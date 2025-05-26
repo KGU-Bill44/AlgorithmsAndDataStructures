@@ -21,6 +21,11 @@ public class MatrixOfNetworkGraph
     {
         graph = new NetworkGraph();
 
+        if (HasCycle(matrixGraph))
+        {
+            throw new GraphCycleException();
+        }
+        
         SetNodes(matrixGraph);
         SetGraph(matrixGraph);
 
@@ -47,5 +52,50 @@ public class MatrixOfNetworkGraph
                 }
             }
         }
+    }
+    
+    private bool HasCycle(int[,] matrix)
+    {
+        int numberNodes = matrix.GetLength(0);
+        int[] visited = new int[numberNodes];
+
+        for (int i = 0; i < numberNodes; i++)
+        {
+            if (visited[i] == 0)
+            {
+                if (DepthFirstSearch(i, matrix, visited))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private bool DepthFirstSearch(int node, int[,] matrix, int[] visited)
+    {
+        visited[node] = 1;
+
+        for (int i = 0; i < matrix.GetLength(0); i++)
+        {
+            if (matrix[node, i] != 0)
+            {
+                if (visited[i] == 1)
+                {
+                    return true;
+                }
+                if (visited[i] == 0)
+                {
+                    if (DepthFirstSearch(i, matrix, visited))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        visited[node] = 2;
+        return false;
     }
 }

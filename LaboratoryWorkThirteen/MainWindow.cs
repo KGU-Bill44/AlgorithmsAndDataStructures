@@ -13,6 +13,7 @@ public partial class MainWindow : Form
     private readonly SolidBrush nodeBrush = new SolidBrush(Color.Yellow);
     private readonly Pen edgePen = new Pen(Color.Brown, 5);
     private readonly int radiusNode = 20;
+    private readonly Dictionary<(GraphNode, GraphNode), Pen> edgeBrush;
 
     public MainWindow(MainWindowController controller)
     {
@@ -20,6 +21,7 @@ public partial class MainWindow : Form
         this.controller = controller;
         SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint,
             true);
+        edgeBrush = new Dictionary<(GraphNode, GraphNode), Pen>();
     }
 
     private void LoadFile(object sender, EventArgs e)
@@ -29,6 +31,7 @@ public partial class MainWindow : Form
             if (ReadStringFromFile(out string resultString))
             {
                 controller.SortGraph(resultString);
+                edgeBrush.Clear();
                 graphPanel.Invalidate();
                 sortedListPanel.Invalidate();
             }
@@ -200,10 +203,13 @@ public partial class MainWindow : Form
                 GraphNode target = source.DegOut[i];
                 float xTargetPosition = nodePosition[target];
                 float angil = 180 * (i % 2);
-                Pen arcPen =
-                    new Pen(
+
+                if (!edgeBrush.TryGetValue((source, target), out var arcPen))
+                {
+                    edgeBrush.Add((source, target), arcPen = new Pen(
                         Color.FromArgb((int)xTargetPosition % 255, (target.Number + source.Number) * 25 % 255,
-                            (int)(yAcrPosition * i) % 255), 5);
+                            (int)(yAcrPosition * i) % 255), 5));
+                }
 
                 e.Graphics.DrawArc(arcPen,
                     new RectangleF(xSourcePosition + radiusNode, yAcrPosition + radiusNode,
