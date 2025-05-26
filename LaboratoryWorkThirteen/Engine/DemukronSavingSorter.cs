@@ -1,4 +1,6 @@
-﻿namespace LaboratoryWorkThirteen.Engine;
+﻿using System.Collections.ObjectModel;
+
+namespace LaboratoryWorkThirteen.Engine;
 
 public class DemukronSavingSorter : IDemukronSorter
 {
@@ -6,18 +8,22 @@ public class DemukronSavingSorter : IDemukronSorter
     private int level = 0;
     private List<GraphNode> previouslyVisited;
     private IEnumerable<GraphNode> currentNodes;
+    private Dictionary<int, IEnumerable<GraphNode>> distributionOfNodesByLevels;
 
     public DemukronSavingSorter(NetworkGraph graph)
     {
         this.originalGraph = graph;
         this.previouslyVisited = new List<GraphNode>();
+        distributionOfNodesByLevels = new Dictionary<int, IEnumerable<GraphNode>>();
     }
+
+    public IDictionary<int, IEnumerable<GraphNode>> NodesDistributedByLevels => new ReadOnlyDictionary<int, IEnumerable<GraphNode>>(distributionOfNodesByLevels);
 
     public List<GraphNode> Sort()
     {
         level = 0;
         previouslyVisited.Clear();
-        Dictionary<int, List<GraphNode>> distributionOfNodesByLevels = new Dictionary<int, List<GraphNode>>();
+        distributionOfNodesByLevels.Clear();
         currentNodes = originalGraph.GetNodes().Where(n => n.DegIn == 0);
 
 

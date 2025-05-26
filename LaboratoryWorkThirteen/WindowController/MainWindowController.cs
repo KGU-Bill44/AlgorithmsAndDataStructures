@@ -4,6 +4,12 @@ namespace LaboratoryWorkThirteen.WindowController
 {
     public class MainWindowController
     {
+        private IDemukronSorter currentSort;
+        private List<GraphNode> currentNodeSortList;
+
+        public IDemukronSorter Sorter => currentSort;
+        public List<GraphNode> SortList => currentNodeSortList;
+
         public int[,] ParseMatrixFromString(string matrixString)
         {
             if (string.IsNullOrEmpty(matrixString))
@@ -46,7 +52,7 @@ namespace LaboratoryWorkThirteen.WindowController
                     else
                     {
                         throw new FormatException(
-                            $"На позиции {i + 1}, {j + 1} встретился отличнвй от 0 или 1 символ {c}.");
+                            $"На позиции {i + 1}, {j + 1} встретился отличный от 0 или 1 символ {c}.");
                     }
                 }
             }
@@ -57,9 +63,9 @@ namespace LaboratoryWorkThirteen.WindowController
         public List<GraphNode> SortGraph(string anyMatrixString)
         {
             int[,] adjacencyMatrix = ParseMatrixFromString(anyMatrixString);
-            IDemukronSorter sorterNetwork = new DemukronUnsavingSorter(new MatrixOfNetworkGraph(adjacencyMatrix));
+            currentSort = new DemukronUnsavingSorter(new MatrixOfNetworkGraph(adjacencyMatrix));
 
-            return sorterNetwork.Sort();
+            return currentNodeSortList = currentSort.Sort();
         }
     }
 }

@@ -31,7 +31,11 @@ partial class MainWindow
     {
         tableLayoutPanel1 = new TableLayoutPanel();
         loadFileButton = new Button();
+        graphPanel = new PictureBox();
+        sortedListPanel = new PictureBox();
         tableLayoutPanel1.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)graphPanel).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)sortedListPanel).BeginInit();
         SuspendLayout();
         // 
         // tableLayoutPanel1
@@ -39,12 +43,15 @@ partial class MainWindow
         tableLayoutPanel1.ColumnCount = 1;
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
         tableLayoutPanel1.Controls.Add(loadFileButton, 0, 0);
+        tableLayoutPanel1.Controls.Add(graphPanel, 0, 1);
+        tableLayoutPanel1.Controls.Add(sortedListPanel, 0, 2);
         tableLayoutPanel1.Dock = DockStyle.Fill;
         tableLayoutPanel1.Location = new Point(0, 0);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
-        tableLayoutPanel1.RowCount = 2;
+        tableLayoutPanel1.RowCount = 3;
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 90F));
+        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
         tableLayoutPanel1.Size = new Size(800, 450);
         tableLayoutPanel1.TabIndex = 0;
         // 
@@ -59,6 +66,26 @@ partial class MainWindow
         loadFileButton.UseVisualStyleBackColor = true;
         loadFileButton.Click += LoadFile;
         // 
+        // graphPanel
+        // 
+        graphPanel.Dock = DockStyle.Fill;
+        graphPanel.Location = new Point(3, 43);
+        graphPanel.Name = "graphPanel";
+        graphPanel.Size = new Size(794, 281);
+        graphPanel.TabIndex = 1;
+        graphPanel.TabStop = false;
+        graphPanel.Paint += GraphPanelPaint;
+        // 
+        // sortedListPanel
+        // 
+        sortedListPanel.Dock = DockStyle.Fill;
+        sortedListPanel.Location = new Point(3, 330);
+        sortedListPanel.Name = "sortedListPanel";
+        sortedListPanel.Size = new Size(794, 117);
+        sortedListPanel.TabIndex = 2;
+        sortedListPanel.TabStop = false;
+        sortedListPanel.Paint += SortedListPanelPrint;
+        // 
         // MainWindow
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
@@ -68,6 +95,8 @@ partial class MainWindow
         Name = "MainWindow";
         Text = "MainWindow";
         tableLayoutPanel1.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)graphPanel).EndInit();
+        ((System.ComponentModel.ISupportInitialize)sortedListPanel).EndInit();
         ResumeLayout(false);
     }
 
@@ -75,4 +104,6 @@ partial class MainWindow
 
     private TableLayoutPanel tableLayoutPanel1;
     private Button loadFileButton;
+    private PictureBox graphPanel;
+    private PictureBox sortedListPanel;
 }
