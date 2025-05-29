@@ -2,7 +2,7 @@
 
 namespace LaboratoryWorkThirteen.Engine;
 
-public class DemukronSavingSorter : IDemukronSorter
+public class KanSavingSorter : IGraphSorter
 {
     private NetworkGraph originalGraph;
     private int level = 0;
@@ -10,7 +10,7 @@ public class DemukronSavingSorter : IDemukronSorter
     private IEnumerable<GraphNode> currentNodes;
     private Dictionary<int, IEnumerable<GraphNode>> distributionOfNodesByLevels;
 
-    public DemukronSavingSorter(NetworkGraph graph)
+    public KanSavingSorter(NetworkGraph graph)
     {
         this.originalGraph = graph;
         this.previouslyVisited = new List<GraphNode>();

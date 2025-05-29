@@ -4,10 +4,10 @@ namespace LaboratoryWorkThirteen.WindowController
 {
     public class MainWindowController
     {
-        private IDemukronSorter currentSort;
+        private IGraphSorter currentSort;
         private List<GraphNode> currentNodeSortList;
 
-        public IDemukronSorter Sorter => currentSort;
+        public IGraphSorter Sorter => currentSort;
         public List<GraphNode> SortList => currentNodeSortList;
 
         public int[,] ParseMatrixFromString(string matrixString)
@@ -63,7 +63,7 @@ namespace LaboratoryWorkThirteen.WindowController
         public List<GraphNode> SortGraph(string anyMatrixString)
         {
             int[,] adjacencyMatrix = ParseMatrixFromString(anyMatrixString);
-            currentSort = new DemukronUnsavingSorter(new MatrixOfNetworkGraph(adjacencyMatrix));
+            currentSort = new KanUnsavingSorter(new MatrixOfNetworkGraph(adjacencyMatrix));
 
             return currentNodeSortList = currentSort.Sort();
         }

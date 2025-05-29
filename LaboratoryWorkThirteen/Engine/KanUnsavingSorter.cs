@@ -2,7 +2,7 @@
 
 namespace LaboratoryWorkThirteen.Engine;
 
-public class DemukronUnsavingSorter : IDemukronSorter
+public class KanUnsavingSorter : IGraphSorter
 {
     private MatrixOfNetworkGraph matrixOfNetworkGraph;
     private List<int> sortedListIndex;
@@ -11,7 +11,7 @@ public class DemukronUnsavingSorter : IDemukronSorter
     private Dictionary<int, IEnumerable<GraphNode>> distributionOfNodesByLevels;
     private int level;
 
-    public DemukronUnsavingSorter(MatrixOfNetworkGraph matrixOfNetworkGraph)
+    public KanUnsavingSorter(MatrixOfNetworkGraph matrixOfNetworkGraph)
     {
         this.matrixOfNetworkGraph = matrixOfNetworkGraph;
         distributionOfNodesByLevels = new Dictionary<int, IEnumerable<GraphNode>>();

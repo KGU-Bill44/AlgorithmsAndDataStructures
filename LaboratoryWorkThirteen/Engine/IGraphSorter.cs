@@ -1,9 +1,9 @@
 ﻿namespace LaboratoryWorkThirteen.Engine;
 
-public interface IDemukronSorter
+public interface IGraphSorter
 {
     /// <summary>
-    /// Сортировка графа алгоритмом Демукрона
+    /// Сортировка графа выбранном алгоритмом 
     /// </summary>
     /// <returns>Отсортированный граф</returns>
     public List<GraphNode> Sort();
